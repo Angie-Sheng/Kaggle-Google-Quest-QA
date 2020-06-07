@@ -33,7 +33,7 @@ To sum up, we have 512 + 512 + 64 + 2 = 1090 new features.
 
 We used a combo of two pretrained Roberta base models to train the dataset. The first Roberta handles the question title and question body pairs, while the second Roberta handles the question title and answer pairs. We only fitted texts into Roberta models at the moment and set aside the 1090 new features.
 
-To prepare the inputs for RoBERTa model to meet the limits(maximum inputs), we trimmed head and tail part of the texts and believe in this way, the model would learn most from the texts.
+To prepare the inputs for RoBERTa model to meet the limits(maximum inputs), we trimmed head and tail part of the texts and believe in this way, the model would learn most from the texts. We chose to not include segment_id in the inputs because we think it wouldn't contribute much to our model.
 
 The Roberta base model has 12 hidden layers and there are 13 layers in total (which includes the final output layer). Every layer has the output dimension batch_size x 512 x 768 (batch _size x maxseqlen x emb_size). We took the last three output layers out, concatenated them together and then applied an global average-pooling on it, because we think instead of the first unit of the output layer, the average over 512 tokens for each input in the batch from last three layers could perform better to capture the meaning of the whole sentence pair. Also, the model would learn some lower level features and added them to the final representation. 
 
