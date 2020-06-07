@@ -1,6 +1,8 @@
 # Kaggle-Google-Quest-QA-40th-Solution
 Team: S.A.Y
+
 Rank: 40th/1571, top 3%
+
 Leaderboard: https://www.kaggle.com/c/google-quest-challenge/leaderboard
 
 Below you could find a general walk through our solution with tricks for Kaggle competition - Google QUEST Q&A Labeling.
@@ -28,6 +30,7 @@ New feature dimension for outputs from USE is (n_sample, 512*2) (because we feed
 To sum up, we have 512 + 512 + 64 + 2 = 1090 new features.
 
 # Model Structure
+
 We used a combo of two pretrained Roberta base models to train the dataset. The first Roberta handles the question title and question body pairs, while the second Roberta handles the question title and answer pairs. We only fitted texts into Roberta models at the moment and set aside the 1090 new features.
 
 To prepare the inputs for RoBERTa model to meet the limits(maximum inputs), we trimmed head and tail part of the texts and believe in this way, the model would learn most from the texts.
@@ -38,8 +41,10 @@ Finally, we concatenated 1090 features with the average embedding and then added
 
 The final predictions are the average of 8 pairs of Roberta models (GroupKFold n_splits = 8).
 
-# Customized Learning rate:
+# Customized Learning rate
+
 A customized scheduler inherited from PolynomialDecay was used here to change the learning rate dynamically. We would like to see the learning rate go up from a low value and then gradually decrease. Because a large part of the model is from a pre-trained model and we do not want to touch that part much.
 
 # Post-processing
+
 Based on EDA we found that discretization of predictions for some challenging targets led to better spearman corr. We just assign the outputs with the values in training data for each column base on their L1 distance. 
